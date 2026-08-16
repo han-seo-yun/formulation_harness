@@ -207,19 +207,11 @@ ${codeTable(CIPAC_DISCONTINUED)}
 Key distinctions to check carefully: SC (suspension, diluted before use) vs SL (true solution); FS (seed-treatment suspension) vs LS (seed-treatment solution); SL (diluted) vs AL (undiluted) vs TD (trigger-spray RTU) vs AE (propellant aerosol); PO (pour-on, >100mL/animal) vs SA (spot-on, <100mL/animal); TC (technical material, no diluent) vs TK (technical concentrate, has diluent) - both ARE legitimate formulation codes, do not call a technical-grade product "not_formulation" just because it is manufacturing-use. Append "-SB" to the code if packaged in a sealed water-soluble bag.
 ` : ''
 
-  const toxicityBlock = fields.includes('toxicity') ? `
-### toxicity (독성정보) - ingredient match is MANDATORY before filling any value
-Only fill field_values.toxicity if the SDS you are citing is genuinely about THIS row's ingredient(s) - its Section 1 product identity and/or Section 3 composition must match the given ingredient_names/CAS_Number. Do not fill toxicity values from a source you have not confirmed matches.
-- If the source you first found is for a different/unrelated substance, do NOT use its toxicity data. Keep searching (PubChem, ECHA, the CAS number directly, other SDS aggregators) for an SDS that actually matches this ingredient, then extract toxicity from THAT one.
-- Only after a genuinely thorough search finds no matching SDS should you leave field_values.toxicity empty (omit the key, or {}) - never borrow/guess toxicity data from a mismatched source just to fill the cell.
-- Set source_mismatch_found=true whenever you reject a source for this reason, even if you go on to find a correct replacement.
-` : ''
-
   return `You are an SDS research agent collecting specific data fields for pesticide/biocide/chemical products, for a Korean toxicology database. Work is parallelized across many agents - your job is to research the batch of products below thoroughly and return structured data. This is a RESEARCH-ONLY pass; a separate verification step happens later, so focus on being thorough and citing your actual source, not on hedging.
 
 ## Fields you must collect for each product in this batch
 ${fieldInstructions}
-${formulationBlock}${toxicityBlock}
+${formulationBlock}
 
 ## SDS quality bar - find or upgrade to a BETTER source when the first one is inadequate
 Prefer, in this priority order: (1) the manufacturer's own SDS/label PDF for the FINISHED, formulated end-use product (not a raw/technical active-ingredient-only SDS, UNLESS the row is genuinely a technical/manufacturing-use product - i.e. formulation_code TC/TK is being researched); (2) www3.epa.gov/pesticides/chem_search/ppls/ (EPA-accepted label, most authoritative for US products); (3) pomerix.com or similar aggregators mirroring EPA's official registration data; (4) the given ingredient_source/tox_source_url/formulation_src hints - but VERIFY these are actually about the right product first, since many hints in this dataset are for an unrelated/mismatched product.
@@ -233,9 +225,6 @@ For whatever SDS/source you end up citing (source_url), regardless of which fiel
 If formulation_code was requested and the product is a raw chemical substance, essential oil/fragrance material, industrial reagent, analytical/HPLC standard, or reference/calibration solution with no CIPAC code meaningfully applicable, set resolution="not_formulation" and not_formulation_reason to one of: single_substance, analytical_standard, reagent, reference_solution, other. This does not stop you from still filling in the other requested fields (ingredients/toxicity/physicochemical can still apply to a raw substance).
 
 Set source_mismatch_found=true and explain in notes if the given hint URL turns out to be for a different/unrelated product. Use resolution="unresolved" ONLY if you genuinely searched hard (including the upgrade search above) and found nothing usable for ANY requested field - do not guess.
-
-## notes field - 특이사항만 (unusual things only)
-Use notes only for something actually worth flagging: a source mismatch and what was wrong with it, ambiguous/conflicting data between sources, or "searched but found no matching SDS" when a field was left empty for that reason. If nothing unusual happened, leave notes as an empty string - do not restate routine confirmations like "found SDS, matches, filled in values".
 
 ## Products to research (JSON)
 ${JSON.stringify(batch, null, 2)}

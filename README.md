@@ -140,11 +140,6 @@ python3 apply_results.py <xlsx> <시트명> final_results.json row_mapping.json
   research와 verify를 물리적으로 다른 두 워크플로우로 분리해 둔 것.
 - **더 나은 SDS 탐색**: 처음 찾은 SDS가 단일물질용이거나 성분/물리화학/독성 중 2개 이상이 비어 있으면
   제조사 사이트·EPA 라벨·다른 SDS 애그리게이터로 계속 검색하도록 지시됨.
-- **독성정보는 성분 일치가 필수**: SDS가 해당 행의 성분(ingredient_names/CAS)과 일치하지 않으면 그
-  SDS의 독성값을 절대 채우지 않음. 불일치를 발견하면 그 성분에 맞는 SDS를 다시 찾아서 그걸로 채우고,
-  아무리 찾아도 없으면 `field_values.toxicity`는 공란(빈 값)으로 남김 — 틀린 소스에서 값을 빌려오지
-  않음. `notes`(메모)는 특이사항(불일치·모호함·못 찾음)이 있을 때만 채우고, 특별한 문제가 없으면
-  빈 문자열로 둠.
 - SC vs SL, FS vs LS, PO vs SA, TC/TK가 정식 제형 코드라는 점 등 — formulation_harness 원본 규칙
   그대로 유지.
 - CDPR 라벨 사이트가 다운되면 즉시 EPA/pomerix로 전환.
